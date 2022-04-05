@@ -18,7 +18,8 @@ var getUserRepos = function(user) {
             })
         }
         else {
-            alert("Error: Github user not found")
+            // if not successful, redirect to homepage
+            document.location.replace("./index.html")
         }
     })
     .catch(function(error) {
@@ -58,7 +59,9 @@ var displayRepos = function(repos, searchTerm) {
         var repoName = repos[i].owner.login + "/" + repos[i].name
 
         // create a container for each repo
-        var repoEl = document.createElement("div")
+        var repoEl = document.createElement("a")
+        // Each repo will be a link that takes them to single.js
+        repoEl.setAttribute("href", "./single-repo.html?repo=" + repoName)
         repoEl.classList = "list-item flex-row justify-space-between align-center"
 
         // create a span to hold repo name
