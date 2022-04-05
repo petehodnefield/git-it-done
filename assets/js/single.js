@@ -1,4 +1,5 @@
 let issuesContainerEL = document.querySelector("#issues-container")
+let limitWarningEl = document.querySelector("#limit-warning")
     
 var getRepoIssues = function(repo) {
     let apiUrl = "https://api.github.com/repos/" + repo + "/issues?direction=asc"
@@ -7,7 +8,11 @@ var getRepoIssues = function(repo) {
             if(response.ok) {
                 response.json().then(function(data) {
                     displayIssues(data)
-                    console.log(data)
+
+                    // Check if API has paginated issues
+                    if(response.headers.get("Link")) {
+                        displayWarning(repo)
+                    }
                 })
             }
             else {
@@ -48,6 +53,19 @@ let displayIssues = function(issues) {
 
         issuesContainerEL.appendChild(issueEl)
     }
+}
+
+let displayWarning = function(repo) {
+    limitWarningEl.textContent = "To see more than 30 issues, visit "
+
+    // create link element
+    let warningLinkEl = document.createElement("a")
+    warningLinkEl.textContent = "here"
+    warningLinkEl.setAttribute("href", "https://github.com/" + repo + "/issues")
+    warningLinkEl.setAttribute("target", "_blank")
+
+    // append to container
+    limitWarningEl.appendChild(warningLinkEl);
 }
   
   getRepoIssues("facebook/react");
